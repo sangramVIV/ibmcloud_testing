@@ -64,7 +64,7 @@ function App() {
       </section>
 
       <section style={styles.section}>
-        <h2 style={styles.sectionTitle}>Key DevOps Concepts</h2>
+        <h2 style={styles.sectionTitle}>Key DevOps Concept</h2>
         <ul>
           <li style={styles.listItem}>
             <strong>Continuous Integration (CI):</strong> Automatically building, testing, and merging code changes frequently.

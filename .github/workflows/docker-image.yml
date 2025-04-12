@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Image CI/CD
 
 on:
   push:
@@ -14,5 +14,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: build_docker_image
+      run: docker build -t sangramviv/web_app_demo:latest .
+    - name: push_image_to_docker_hub
+       run:
+         docker login -u sangramviv -p ${{secrets.DOCKER_HUB}}
+         docker push sangramviv/web_app_demo:latest

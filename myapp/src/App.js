@@ -92,7 +92,7 @@ function App() {
         <p>The DevOps landscape is vast, but some popular tools include:</p>
         <ul>
           <li style={styles.listItem}>Version Control: <code style={styles.code}>Git</code> (GitHub, GitLab, Bitbucket)</li>
-          <li style={styles.listItem}>CI/CD: <code style={styles.code}>Jenkins</code>, <code style={styles.code}>GitLab CI/CD</code>, <code style={styles.code}>GitHub Actions</code>, <code style={styles.code}>CircleCI</code></li>
+          <li style={styles.listItem}>CI/CD git: <code style={styles.code}>Jenkins</code>, <code style={styles.code}>GitLab CI/CD</code>, <code style={styles.code}>GitHub Actions</code>, <code style={styles.code}>CircleCI</code></li>
           <li style={styles.listItem}>Containerization: <code style={styles.code}>Docker</code></li>
           <li style={styles.listItem}>Orchestration: <code style={styles.code}>Kubernetes</code>, <code style={styles.code}>Docker Swarm</code></li>
           <li style={styles.listItem}>Configuration Management: <code style={styles.code}>Ansible</code>, <code style={styles.code}>Chef</code>, <code style={styles.code}>Puppet</code></li>

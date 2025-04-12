@@ -17,6 +17,6 @@ jobs:
     - name: build_docker_image
       run: docker build ./myapp/ -t sangramviv/web_app_demo:latest 
     - name: push_image_to_docker_hub
-       run: 
-         docker login -u sangramviv -p ${{secrets.DOCKER_HUB}}
-         docker push sangramviv/web_app_demo:latest
+      run: |
+        docker login -u sangramviv -p ${{secrets.DOCKER_HUB}}
+        docker push sangramviv/web_app_demo:latest

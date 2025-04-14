@@ -1,4 +1,4 @@
-name: Docker Image CI/CD
+name: Docker Image CI/CD with AWS ECR and EC2
 
 on:
   push:
@@ -8,15 +8,45 @@ on:
 
 jobs:
 
-  build:
-
+  build-and-deploy:
+    name: Build, Push to ECR and Deploy to EC2
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: build_docker_image
-      run: docker build ./myapp/ -t sangramviv/web_app_demo:latest 
-    - name: push_image_to_docker_hub
+    # Step 1: Checkout code
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    # Step 2: Configure AWS credentials
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1 # Change to your AWS region
+
+    # Step 3: Login to ECR
+    - name: Login to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v2
+
+    # Step 4: Build and Tag Docker Image
+    - name: Build Docker Image
       run: |
-        docker login -u sangramviv -p ${{secrets.DOCKER_HUB}}
-        docker push sangramviv/web_app_demo:latest
+        REPO_URI=$(aws ecr describe-repositories --repository-names "devops_testing" --query 'repositories[0].repositoryUri' --output text)
+        docker build ./myapp/ -t $REPO_URI:latest
+
+    # Step 5: Push Docker Image to ECR
+    - name: Push Docker Image to ECR
+      run: |
+        REPO_URI=$(aws ecr describe-repositories --repository-names "devops_testing" --query 'repositories[0].repositoryUri' --output text)
+        docker push $REPO_URI:latest
+
+    # # Step 6: Deploy on EC2
+    # - name: Deploy on EC2
+    #   run: |
+    #     ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_PRIVATE_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+    #       REPO_URI=$(aws ecr describe-repositories --repository-names "web_app_demo" --query 'repositories[0].repositoryUri' --output text)
+    #       docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) $REPO_URI
+    #       docker pull $REPO_URI:latest
+    #       docker run -d -p 80:80 --name web_app_demo $REPO_URI:latest
+        # EOF

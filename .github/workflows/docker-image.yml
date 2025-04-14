@@ -25,10 +25,10 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        REPO_URI="public.ecr.aws/i0h4r7u1/devops_testing"
+        REPO_URI="public.ecr.aws/i0h4r7u1/webserver_testing"
         docker build ./myapp/ -t $REPO_URI:latest
 
     - name: Push Docker Image to ECR
       run: |
-        REPO_URI="public.ecr.aws/i0h4r7u1/devops_testing"
+        REPO_URI="public.ecr.aws/i0h4r7u1/webserver_testing"
         docker push $REPO_URI:latest

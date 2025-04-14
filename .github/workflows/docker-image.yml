@@ -33,3 +33,15 @@ jobs:
       run: |
         REPO_URI="public.ecr.aws/i0h4r7u1/webserver_testing"
         docker push $REPO_URI:latest
+
+    - name: Connect to EC2 and Run Docker Container
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          docker pull public.ecr.aws/i0h4r7u1/webserver_testing:latest
+          docker stop webserver_testing || true
+          docker rm webserver_testing || true
+          docker run -d -p 80:80 --name webserver_testing public.ecr.aws/i0h4r7u1/webserver_testing:latest

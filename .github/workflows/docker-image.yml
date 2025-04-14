@@ -1,35 +1,34 @@
-name: Build and Push to ECR
+name: Build and Push Docker Image
 
 on:
   push:
-    branches: [ main ]  # Adjust as needed
+    branches:
+      - main
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v3
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ap-south-1
-      
-    - name: Login to Amazon ECR Public
-      id: login-ecr-public
-      uses: aws-actions/amazon-ecr-login@v1
-      with:
-        registry-type: public
-        
-    - name: Build and push Docker image
-      env:
-        ECR_REGISTRY: public.ecr.aws
-        ECR_REPOSITORY: i0h4r7u1/devops_testing
-        IMAGE_TAG: latest
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build Docker Image
       run: |
-        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        REPO_URI="public.ecr.aws/i0h4r7u1/devops_testing"
+        docker build ./myapp/ -t $REPO_URI:latest
+
+    - name: Push Docker Image to ECR
+      run: |
+        REPO_URI="public.ecr.aws/i0h4r7u1/devops_testing"
+        docker push $REPO_URI:latest

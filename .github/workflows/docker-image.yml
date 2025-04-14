@@ -32,21 +32,20 @@ jobs:
     # Step 4: Build and Tag Docker Image
     - name: Build Docker Image
       run: |
-        REPO_URI=$(aws ecr describe-repositories --repository-names "devops_testing" --query 'repositories[0].repositoryUri' --output text)
+        REPO_URI="public.ecr.aws/i0h4r7u1/devops_testing"
         docker build ./myapp/ -t $REPO_URI:latest
-
+    
     # Step 5: Push Docker Image to ECR
     - name: Push Docker Image to ECR
       run: |
-        REPO_URI=$(aws ecr describe-repositories --repository-names "devops_testing" --query 'repositories[0].repositoryUri' --output text)
+        REPO_URI="public.ecr.aws/i0h4r7u1/devops_testing"
         docker push $REPO_URI:latest
-
-    # # Step 6: Deploy on EC2
-    # - name: Deploy on EC2
-    #   run: |
-    #     ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_PRIVATE_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
-    #       REPO_URI=$(aws ecr describe-repositories --repository-names "web_app_demo" --query 'repositories[0].repositoryUri' --output text)
-    #       docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) $REPO_URI
-    #       docker pull $REPO_URI:latest
-    #       docker run -d -p 80:80 --name web_app_demo $REPO_URI:latest
-        # EOF
+        
+        # - name: Deploy on EC2
+        #   run: |
+        #     ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_PRIVATE_KEY }} ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+        #       REPO_URI=$(aws ecr describe-repositories --repository-names "web_app_demo" --query 'repositories[0].repositoryUri' --output text)
+        #       docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) $REPO_URI
+        #       docker pull $REPO_URI:latest
+        #       docker run -d -p 80:80 --name web_app_demo $REPO_URI:latest
+        #     EOF
